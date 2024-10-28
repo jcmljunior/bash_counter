@@ -77,7 +77,6 @@ function create_main_menu() {
 
 # Referencias:
 # https://diegomariano.com/shell-script-um-guia-basico/
-# https://diegomariano.com/shell-script-um-guia-basico/
 function handle_menu_navigation() {
     if [ "$response" == "A" ]; then
         move_menu_position_up
