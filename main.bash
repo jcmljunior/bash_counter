@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Exemplo de contador com ações para incrementar e decrementar.
+# Author: Julio Cesar <jcmljunior@gmail.com>
+
 # Ajustes de formatação.
 # Referencias:
 # https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
