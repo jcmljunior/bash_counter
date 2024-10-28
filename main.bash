@@ -50,6 +50,17 @@ function clear() {
     printf "\033c"
 }
 
+function get_path() {
+    cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd
+}
+
+function assert() {
+    if ! eval "$1"; then
+        echo "Assertion failed: $2"
+        exit "$1"
+    fi
+}
+
 function ready() {
     clear
 
@@ -99,8 +110,8 @@ function get_input() {
     # Captura a primeira tecla pressionada pelo utilizador e atribui a 'response'.
     read -s -r -n1 response
 
-    handle_menu_navigation $response
-    
+    handle_menu_navigation "$response"
+
     if [ -z "$response" ]; then
         case "${menuItems[$menuCurrentPosition]}" in
         "${menuItems[0]}")
@@ -119,6 +130,7 @@ function get_input() {
 }
 
 function main() {
+    declare -I basePath="$(get_path)"
     declare -I isProcess="true"
     declare -I counter=0
 
@@ -130,8 +142,8 @@ function main() {
     )
 
     # Importação das funcionalidades.
-    source "./tools/actions/increment_counter.bash"
-    source "./tools/actions/decrement_counter.bash"
+    source "${basePath}/actions/increment_counter.bash"
+    source "${basePath}/actions/decrement_counter.bash"
 
     while "$isProcess"; do
         ready

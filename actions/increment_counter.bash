@@ -4,5 +4,6 @@
 # Author: Julio Cesar <jcmljunior@gmail.com>
 
 function incrementCounter() {
-    counter=$(("$1" + 1))
+    assert  "[[ \$counter -lt 10 ]]" "Contador ultrapassou o limite de 10."
+    ((counter++))
 }

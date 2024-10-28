@@ -4,5 +4,6 @@
 # Author: Julio Cesar <jcmljunior@gmail.com>
 
 function decrementCounter() {
-    counter=$(("$1" - 1))
+    assert "[[ \$counter -gt 0 ]]" "O contador não pode ser negativo." || return
+    ((counter--))
 }
