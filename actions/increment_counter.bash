@@ -4,6 +4,5 @@
 # Author: Julio Cesar <jcmljunior@gmail.com>
 
 function incrementCounter() {
-    echo "Incrementando..."
     counter=$(("$1" + 1))
 }

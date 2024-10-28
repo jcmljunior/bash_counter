@@ -4,6 +4,5 @@
 # Author: Julio Cesar <jcmljunior@gmail.com>
 
 function decrementCounter() {
-    echo "Decrementando..."
     counter=$(("$1" - 1))
 }

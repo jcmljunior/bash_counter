@@ -46,10 +46,13 @@ declare -- onPurple="\033[45m"
 declare -- onCyan="\033[46m"
 declare -- onWhite="\033[47m"
 
-function ready() {
+function clear() {
     printf "\033c"
+}
 
-    # Apresentação dos dados.
+function ready() {
+    clear
+
     echo ""
     echo -e "[Contador: $yellow$counter$reset]"
     echo ""
@@ -58,10 +61,11 @@ function ready() {
 function process() {
     echo -e "${bwhite}Selecione a ação para continuar.${reset}"
 
-    # Apresentação das opções do menu principal.
-    for str in "${menuItems[@]}"; do
+    create_main_menu
+}
 
-        # Efetiva a criação da opção selecionada.
+function create_main_menu() {
+    for str in "${menuItems[@]}"; do
         if [ "${menuItems[$menuCurrentPosition]}" == "$str" ]; then
             echo -e "[ ${yellow}*${reset} ] $UWhite$str$reset"
             continue
@@ -71,26 +75,33 @@ function process() {
     done
 }
 
-function get_input() {
+# Referencias:
+# https://diegomariano.com/shell-script-um-guia-basico/
+# https://diegomariano.com/shell-script-um-guia-basico/
+function handle_menu_navigation() {
+    if [ "$response" == "A" ]; then
+        move_menu_position_up
+    fi
 
+    if [ "$response" == "B" ]; then
+        move_menu_position_down
+    fi
+}
+
+function move_menu_position_up() {
+    [[ "$menuCurrentPosition" -gt 0 ]] && menuCurrentPosition=$(("$menuCurrentPosition" - 1))
+}
+
+function move_menu_position_down() {
+    [[ "$menuCurrentPosition" -lt "${#menuItems[@]}" ]] && menuCurrentPosition=$(("$menuCurrentPosition" + 1))
+}
+
+function get_input() {
     # Captura a primeira tecla pressionada pelo utilizador e atribui a 'response'.
     read -s -r -n1 response
 
-    # Decrementa o valor do indice se for maior que 0.
-    # Referencias:
-    # https://diegomariano.com/shell-script-um-guia-basico/
-    if [ "$response" == "A" ]; then
-        [[ "$menuCurrentPosition" -gt 0 ]] && menuCurrentPosition=$(("$menuCurrentPosition" - 1))
-    fi
-
-    # Incrementa o valor do indice se for menor que o valor total de ações.
-    # Referencias:
-    # https://diegomariano.com/shell-script-um-guia-basico/
-    if [ "$response" == "B" ]; then
-        [[ "$menuCurrentPosition" -lt "${#menuItems[@]}" ]] && menuCurrentPosition=$(("$menuCurrentPosition" + 1))
-    fi
-
-    # Executa a ação selecionada pelo utilizador.
+    handle_menu_navigation $response
+    
     if [ -z "$response" ]; then
         case "${menuItems[$menuCurrentPosition]}" in
         "${menuItems[0]}")
@@ -124,14 +135,11 @@ function main() {
     source "./tools/actions/decrement_counter.bash"
 
     while "$isProcess"; do
-        # Apresentação do menu.
         ready
 
         while true; do
             process
             get_input
-
-            # Finaliza o laço inicial para reconstrução da opções.
             break
         done
     done
